@@ -21,7 +21,7 @@ exports.handler = (event, context, callback) => {
             case "LaunchRequest": {
                 // Launch request
                 console.log("Launch request");
-                tubeTimeIntent();
+                WarbandsHandler();
                 break;
             }
 
@@ -33,12 +33,7 @@ exports.handler = (event, context, callback) => {
                 switch (event.request.intent.name) {
 
                     case "WarbandsTime": {
-                        context.succeed(
-                            generateResponse(
-                                buildSpeechletResponse(Warbands.timeToNextWarbands(), true),
-                                {}
-                            )
-                        );
+                        WarbandsHandler();
                         break;
                     }
                     default: {
@@ -62,12 +57,36 @@ exports.handler = (event, context, callback) => {
             }
 
             default: {
-                context.fail("This is a default response. Some error has occurred.");
+                endSessionHandler("Default hit");
+                //context.fail("This is a default response. Some error has occurred.");
             }
         }
 
     } catch(error) {
-        context.fail("Failed due to some unknown error");
+        endSessionHandler("Catch hit");
+        // context.fail("Failed due to some unknown error");
+    }
+
+    function WarbandsHandler() {
+        "use strict";
+        context.succeed(
+            generateResponse(
+                buildSpeechletResponse(Warbands.timeToNextWarbands(), true),
+                {}
+            )
+        );
+    }
+
+    function endSessionHandler(speech) {
+        if (typeof speech === "undefined") {
+            speech = "Good bye from the wise old man.";
+        }
+        context.succeed(
+            generateResponse(
+                buildSpeechletResponse(speech, true),
+                {}
+            )
+        );
     }
 };
 
