@@ -4,6 +4,7 @@ exports.handler = (event, context, callback) => {
     const plurals = require("./utils/lang/plurals");
 
     const Warbands = require('./Combat/PvP/Warbands');
+    const Araxxor = require('./Combat/PvM/Araxxor');
 
     /**
      * MAIN
@@ -34,6 +35,10 @@ exports.handler = (event, context, callback) => {
 
                     case "WarbandsTime": {
                         WarbandsHandler();
+                        break;
+                    }
+                    case "AraxxorPath": {
+                        AraxxorCurrentPathsHandler();
                         break;
                     }
                     default: {
@@ -72,6 +77,16 @@ exports.handler = (event, context, callback) => {
         context.succeed(
             generateResponse(
                 buildSpeechletResponse(Warbands.timeToNextWarbands(), true),
+                {}
+            )
+        );
+    }
+
+    function AraxxorCurrentPathsHandler() {
+        "use strict";
+        context.succeed(
+            generateResponse(
+                buildSpeechletResponse(Araxxor.getAraxxorPath(), true),
                 {}
             )
         );
